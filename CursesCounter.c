@@ -10,41 +10,86 @@
 
 int main()
 {
-  int i;
+  /* Start curses mode */
+  initscr();
+
+  // Get current directory
+  move(0, 0);
+  char current_directory[256];
+  getcwd(current_directory, 200);
+  printw("Current Working Dir: %s", current_directory);
+
+  // Get current time
+  move(1, 0);
+  time_t rawtime;
+  struct tm *timeinfo;
+  time(&rawtime);
+  timeinfo = localtime(&rawtime);
+  printw("It is now: %s", asctime(timeinfo));
+
+  // Get files
+  DIR * curr_directory;
+  struct dirent* directory_entry;
   char command[16];
-  initscr(); /* Start curses mode */
-  for (i = 0; i < 1000; i+=5)
+  int count = 0;
+  int file_place = 3;
+  move(file_place, 0);
+  curr_directory = opendir(".");
+  count = 0;
+
+  while ((directory_entry = readdir(curr_directory)) && count != 5)
   {
-    // Keep track of entered character
-    move(0, 0);
-    printw("Previous command: ");
+    if (((directory_entry->d_type) & DT_REG) && count != 0) {
+      printw("%d. %s", count++, directory_entry->d_name);
+      file_place++;
+      move(file_place, 15);
+    } else if (((directory_entry->d_type) & DT_REG)) {
+      printw("Files:");
+      move(file_place, 15);
+      printw("%d. %s", count++, directory_entry->d_name);
+      file_place++; 
+      move(file_place, 15);
+    }
+      
+    if (count == 5)
+    {
+      file_place++;
+      move(file_place, 0);
+    }
+  }
+  rewinddir(curr_directory);
 
-    // Keep track of entered character
-    move(1, 0);
-    printw("Enter a command: ");
-
-    // Print the current number and the number + 5
-    move(4, 8);
-    printw("%d %d", i,i+5);
-
-    // Print onto screen
-    refresh();
-
+  // Get directories
+  count = 0;
+  
+  while ((directory_entry = readdir(curr_directory)))
+  {
+    
+    if (((directory_entry->d_type) & DT_DIR) && count != 0) {
+      printw("%d. %s", count++, directory_entry->d_name);
+      file_place++;
+      move(file_place, 15);
+    } else if ((directory_entry->d_type) & DT_DIR) {
+      printw("Directories: ");
+      move(file_place, 15);
+      printw("%d. %s", count++, directory_entry->d_name);
+      file_place++;
+      move(file_place, 15);
+      count++;
+    }
+    
+      
+  }
+  
+  closedir(curr_directory);
+   
+  while(strcmp(command, "Q"))
+  {
     // Get user input
-    move(1, 17);
+    move(4, 17);
     getnstr(command, 16);
     refresh();
-
-    // Erase user's input for cleanliness and replace previous input for tracking
-    move(1, 0);
-    clrtoeol();
-    printw("Enter a command: ");
-    move(0, 0);
-    clrtoeol();
-    printw("Previous command: %s", command);
-    refresh();
   }
-  getch();  /* Wait for user input */
   endwin(); /* End curses mode                */
 
   return 0;
