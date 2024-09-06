@@ -1,4 +1,3 @@
-
 #include <sys/types.h>
 #include <curses.h>
 #include <stdlib.h>
@@ -7,6 +6,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <time.h>
+#include <sys/stat.h>
 
 void run_program(char *system_call)
 {
@@ -24,17 +24,33 @@ int main()
   int file_place = 3;
   int current_directory_count, current_de_count = 0;
   bool need_display_reset = false;
+  char sort_mode[32];
 
   DIR *curr_directory;
   curr_directory = opendir(".");
   struct dirent *directory_entry;
   char directory_entry_names[100][64];
+  long int directory_entry_sizes[100];
+  char directory_entry_first_five[5][64];
+  struct stat file_info;
   int den_count = 0;
+
+
   while ((directory_entry = readdir(curr_directory)))
   {
     if (((directory_entry->d_type) & DT_REG))
     {
-      strcpy(directory_entry_names[den_count++], directory_entry->d_name);
+      // Grabs directory entry names and puts into list
+      strcpy(directory_entry_names[den_count], directory_entry->d_name);
+
+      // Grabs directory entry sizes and puts into list
+      char file_path[500];
+      snprintf(file_path, sizeof(file_path), "./%s", directory_entry->d_name);
+      if (stat(file_path, &file_info) == 0)
+      {
+        directory_entry_sizes[den_count] = file_info.st_size;
+      }
+      den_count++;
     }
   }
   
@@ -88,11 +104,22 @@ int main()
         de_max = den_count - current_de_count;
       }
 
+      if (strcmp(sort_mode, "SL"))
+      {
+        
+      }
+      for (int i = current_de_count; i < current_de_count + de_max; i++) 
+      {
+        char directory_entry_size_as_string[64];
+        sprintf(directory_entry_size_as_string, "%ld", directory_entry_sizes[i]);
+        strcpy(directory_entry_first_five[i%5], directory_entry_size_as_string);
+      }
+
       for (int i = current_de_count; i < current_de_count + de_max; i++) 
       {
         if (i % 5 != 0)
         {
-          printw("%d. %s", i, directory_entry_names[i]);
+          printw("%d. %ld bytes\t %s", i, directory_entry_sizes[i], directory_entry_names[i]);
           file_place++;
           move(file_place, 15);
         }
@@ -100,7 +127,7 @@ int main()
         {
           printw("Files:");
           move(file_place, 15);
-          printw("%d. %s", i, directory_entry_names[i]);
+          printw("%d. %ld bytes\t %s", i, directory_entry_sizes[i], directory_entry_names[i]);
           file_place++;
           move(file_place, 15);
         }
@@ -110,7 +137,12 @@ int main()
           move(file_place, 10);
           printw("Press NF for next files | Press PF for previous files");
           file_place++;
+          move(file_place, 10);
+          printw("Press SL to sort large to small | Press SS to sort small to large");
           file_place++;
+          move(file_place, 10);
+          printw("Press SN to sort newest to oldest | Press SO to sort oldest to newest");
+          file_place+=2;
           move(file_place, 0);
         }
       }
@@ -133,7 +165,7 @@ int main()
         }
         else
         {
-          printw("Files:");
+          printw("Directories:");
           move(file_place, 15);
           printw("%d. %s", i, directory_names[i]);
           file_place++;
@@ -204,6 +236,26 @@ int main()
     }
     case 'S':
     {
+      if (strcmp(command, "SL") == 0)
+      {
+        strcpy(sort_mode, "SL");
+        need_display_reset = true;
+      }
+      else if (strcmp(command, "SS") == 0)
+      {
+        strcpy(sort_mode, "SS");
+        need_display_reset = true;
+      }
+      else if (strcmp(command, "SN") == 0)
+      {
+        strcpy(sort_mode, "SN");
+        need_display_reset = true;
+      }
+      else if (strcmp(command, "SO") == 0)
+      {
+        strcpy(sort_mode, "SO");
+        need_display_reset = true;
+      }
       break;
     }
     case 'N':
