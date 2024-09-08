@@ -16,26 +16,24 @@ void run_program(char *system_call)
   refresh();
 }
 
-void swap(long int *arr, char dir_entries[][256], char directory_entry_readable_dates[][256], int i, int j)
+void swap(long int *arr, char dir_entries[][2048], char directory_entry_readable_dates[][2048], int i, int j)
 {
   int temp = arr[i];
   arr[i] = arr[j];
   arr[j] = temp;
 
-  char temp_str[256];
+  char temp_str[2048];
   strcpy(temp_str, dir_entries[i]);
   strcpy(dir_entries[i], dir_entries[j]);
   strcpy(dir_entries[j], temp_str);
 
-  char date_str[256];
+  char date_str[2048];
   strcpy(date_str, directory_entry_readable_dates[i]);
   strcpy(directory_entry_readable_dates[i], directory_entry_readable_dates[j]);
   strcpy(directory_entry_readable_dates[j], date_str);
-
-  
 }
 
-void bubble_sort_asc_size(long int sizes[], char directory_entries[][256], char directory_entry_readable_dates[][256], int n)
+void bubble_sort_asc_size(long int sizes[], char directory_entries[][2048], char directory_entry_readable_dates[][2048], int n)
 {
   for (int i = 0; i < n - 1; i++)
   {
@@ -49,7 +47,7 @@ void bubble_sort_asc_size(long int sizes[], char directory_entries[][256], char 
   }
 }
 
-void bubble_sort_desc_size(long int sizes[], char directory_entries[][256], char directory_entry_readable_dates[][256], int n)
+void bubble_sort_desc_size(long int sizes[], char directory_entries[][2048], char directory_entry_readable_dates[][2048], int n)
 {
   for (int i = 0; i < n - 1; i++)
   {
@@ -62,7 +60,7 @@ void bubble_sort_desc_size(long int sizes[], char directory_entries[][256], char
     }
   }
 }
-void get_cwd_and_time(char current_directory[256], char sort_mode[32])
+void get_cwd_and_time(char current_directory[2048], char sort_mode[32])
 {
   // Get current directory
   move(0, 0);
@@ -97,9 +95,9 @@ int main(int argc, char *argv[])
 
   // Initializing current directory as the folder that runs this shell
   DIR *curr_directory;
-  char current_directory[256];
-  getcwd(current_directory, 200);
-  char directory_to_enter[256] = ".";
+  char current_directory[2048];
+  getcwd(current_directory, 2048);
+  char directory_to_enter[2048] = ".";
   if (argc > 1)
   {
     strcpy(directory_to_enter, argv[1]);
@@ -107,17 +105,17 @@ int main(int argc, char *argv[])
 
   // Directory entry and name logs initialized
   struct dirent *directory_entry;
-  char directory_entry_names[1024][256];
+  char directory_entry_names[1024][2048];
   long int directory_entry_sizes[1024];
   long int directory_entry_dates[1024];
-  char directory_entry_readable_dates[1024][256];
+  char directory_entry_readable_dates[1024][2048];
   int current_directory_count, current_de_count, den_count = 0;
-  char de_first_five[5][256];
+  char de_first_five[5][2048];
   long int de_first_sizes[5];
-  char de_first_readable_dates[5][256];
+  char de_first_readable_dates[5][2048];
   long int de_first_dates[5];
   int directory_count = 0;
-  char directory_names[100][64];
+  char directory_names[1024][2048];
 
   // Create stat object to get directory entry sizes
   struct stat file_info;
@@ -146,7 +144,7 @@ int main(int argc, char *argv[])
 
         curr_directory = opendir(directory_to_enter);
         chdir(directory_to_enter);
-        getcwd(current_directory, 256);
+        getcwd(current_directory, 2048);
 
         // Get directory entries and entry sizes
         while ((directory_entry = readdir(curr_directory)))
@@ -348,14 +346,18 @@ int main(int argc, char *argv[])
 
       if (space_pos != NULL)
       {
-        space_pos[strcspn(space_pos, "\n")];
+        char *newline_pos = strchr(space_pos, '\n');
+        if (newline_pos != NULL)
+        {
+          *newline_pos = '\0';
+        }
       }
       else
       {
         break;
       }
 
-      char system_command[32];
+      char system_command[256];
       snprintf(system_command, sizeof(system_command), "%s", space_pos + 1);
       run_program(system_command);
 
