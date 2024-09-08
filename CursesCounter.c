@@ -81,7 +81,7 @@ void get_cwd_and_time(char current_directory[256], char sort_mode[32])
   printw("Sorting Mode: %s", sort_mode);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
   /* Start curses mode */
   initscr();
@@ -100,6 +100,10 @@ int main()
   char current_directory[256];
   getcwd(current_directory, 200);
   char directory_to_enter[256] = ".";
+  if (argc > 1)
+  {
+    strcpy(directory_to_enter, argv[1]);
+  }
 
   // Directory entry and name logs initialized
   struct dirent *directory_entry;
