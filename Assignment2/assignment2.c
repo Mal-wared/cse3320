@@ -28,24 +28,27 @@
  *  You will use synchronization operations to avoid overwriting
  *  shared resources.
  *
+ *  References:
+ *  - https://www.geeksforgeeks.org/insertion-sort-algorithm/
+ *
  * @author Name:       Nicholas Nhat Tran \n
  *         Student ID: 1002027150
  * @date 2024-10-19
  */
 
-void initPart1();
+void initSort();
 int getData(int numData[MAX_DATA], char strData[MAX_DATA][MAX_STRING_LENGTH]);
+void insertionSort(int numData[MAX_DATA], char strData[MAX_DATA][MAX_STRING_LENGTH], int dataListSize);
 
 int main(int argc, char *argv[])
 {
-    initPart1();
-
+    initSort();
     return 0;
 }
 
-void initPart1()
+void initSort()
 {
-
+    // 1. Get the data set
     int numData[MAX_DATA];
     char strData[MAX_DATA][MAX_STRING_LENGTH];
 
@@ -56,10 +59,22 @@ void initPart1()
         return;
     }
 
-    for (int i = 0; i < MAX_DATA; i++)
-    {
-        printf("%d,%s\n", numData[i], strData[i]);
-    }
+    // 2. Sort the data, that is each "record" (line, tuple) in ascending order by numeric value
+    // 3. “Instrument” your program (time it).
+    int dataListSize = sizeof(numData) / sizeof(numData[0]);
+
+    // Start the timer
+    clock_t startTime = clock();
+
+    // Execute the sorting algorithm
+    insertionSort(numData, strData, dataListSize);
+
+    // End the timer
+    clock_t endTime = clock();
+    double elapsedTime = (double)(endTime - startTime) / CLOCKS_PER_SEC;
+
+    // Print time taken to sort the algorithm
+    printf("Insertion sort took %.3f seconds\n", elapsedTime);
 }
 
 int getData(int numData[MAX_DATA], char strData[MAX_DATA][MAX_STRING_LENGTH])
@@ -94,4 +109,25 @@ int getData(int numData[MAX_DATA], char strData[MAX_DATA][MAX_STRING_LENGTH])
 
     fclose(fp);
     return 0;
+}
+
+// Source code pulled from https://www.geeksforgeeks.org/insertion-sort-algorithm/
+void insertionSort(int numData[MAX_DATA], char strData[MAX_DATA][MAX_STRING_LENGTH], int dataListSize)
+{
+    for (int i = 1; i < dataListSize; ++i)
+    {
+        int key = numData[i];
+        char strKey[MAX_STRING_LENGTH];
+        strcpy(strKey, strData[i]);
+        int j = i - 1;
+
+        while (j >= 0 && numData[j] > key)
+        {
+            numData[j + 1] = numData[j];
+            strcpy(strData[j + 1], strData[j]);
+            j = j - 1;
+        }
+        numData[j + 1] = key;
+        strcpy(strData[j + 1], strKey);
+    }
 }

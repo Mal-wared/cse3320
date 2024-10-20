@@ -1,0 +1,65 @@
+\hypertarget{assignment2_8c}{}\doxysection{assignment2.\+c File Reference}
+\label{assignment2_8c}\index{assignment2.c@{assignment2.c}}
+
+
+Get experience creating and running concurrent processes and threads.  
+
+
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+Include dependency graph for assignment2.\+c\+:
+% FIG 0
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{assignment2_8c_aaf06a3762adb0aa04b8a5f8f016ca5e9}\label{assignment2_8c_aaf06a3762adb0aa04b8a5f8f016ca5e9}} 
+\#define {\bfseries MAX\+\_\+\+DATA}~10000
+\item 
+\mbox{\Hypertarget{assignment2_8c_a6789ebc0df71a8ef76bfbb4fb5f74aad}\label{assignment2_8c_a6789ebc0df71a8ef76bfbb4fb5f74aad}} 
+\#define {\bfseries MAX\+\_\+\+STRING\+\_\+\+LENGTH}~32
+\item 
+\mbox{\Hypertarget{assignment2_8c_aecc8b368d5ba0386b219fdd6a916b0b2}\label{assignment2_8c_aecc8b368d5ba0386b219fdd6a916b0b2}} 
+\#define {\bfseries ERROR\+\_\+\+FILE\+\_\+\+NOT\+\_\+\+FOUND}~1
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{assignment2_8c_afbe26efd666a51ae9450f3a9172c3397}\label{assignment2_8c_afbe26efd666a51ae9450f3a9172c3397}} 
+void {\bfseries init\+Sort} ()
+\item 
+\mbox{\Hypertarget{assignment2_8c_af3bed86c758a5d51e0cfaf5ac89845e6}\label{assignment2_8c_af3bed86c758a5d51e0cfaf5ac89845e6}} 
+int {\bfseries get\+Data} (int num\+Data\mbox{[}MAX\+\_\+\+DATA\mbox{]}, char str\+Data\mbox{[}MAX\+\_\+\+DATA\mbox{]}\mbox{[}MAX\+\_\+\+STRING\+\_\+\+LENGTH\mbox{]})
+\item 
+\mbox{\Hypertarget{assignment2_8c_a967bbc65dd15e0c30c60c6f1d28e35b3}\label{assignment2_8c_a967bbc65dd15e0c30c60c6f1d28e35b3}} 
+void {\bfseries insertion\+Sort} (int num\+Data\mbox{[}MAX\+\_\+\+DATA\mbox{]}, char str\+Data\mbox{[}MAX\+\_\+\+DATA\mbox{]}\mbox{[}MAX\+\_\+\+STRING\+\_\+\+LENGTH\mbox{]}, int data\+List\+Size)
+\item 
+\mbox{\Hypertarget{assignment2_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{assignment2_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+int {\bfseries main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Get experience creating and running concurrent processes and threads. 
+
+Part 1\+: You will create processes, run processes in parallel, and pass information between processes. ~\newline
+ The data to be processed are “tuples” which are numbers and associated text strings, that is lines of CSV separated values, we wish to sort these.
+
+Part 2\+: You will create a process and threads, run in parallel, and pass information between threads. ~\newline
+ You will use synchronization operations to avoid overwriting shared resources.
+
+References\+:
+\begin{DoxyItemize}
+\item \href{https://www.geeksforgeeks.org/insertion-sort-algorithm/}{\texttt{ https\+://www.\+geeksforgeeks.\+org/insertion-\/sort-\/algorithm/}}
+\end{DoxyItemize}
+
+\begin{DoxyAuthor}{Author}
+Name\+: Nicholas Nhat Tran ~\newline
+ Student ID\+: 1002027150 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2024-\/10-\/19 
+\end{DoxyDate}
